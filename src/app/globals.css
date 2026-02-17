@@ -1,0 +1,286 @@
+@import "tailwindcss";
+
+/* ── Tailwind v4 Theme Configuration ──────────── */
+@theme {
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-nunito), system-ui, sans-serif;
+
+  --color-bg: #F5EFE6;
+  --color-bg2: #EDE5D8;
+  --color-surface: #FEFCF9;
+  --color-ink: #1C1612;
+  --color-ink2: #5C4E3E;
+  --color-ink3: #9C8E7E;
+
+  --color-clay-red: #FF6B6B;
+  --color-clay-red-d: #E85555;
+  --color-clay-gold: #FFD166;
+  --color-clay-gold-d: #E8BB4E;
+  --color-clay-mint: #5DD9A4;
+  --color-clay-mint-d: #47C48F;
+  --color-clay-sky: #74C0FC;
+  --color-clay-sky-d: #5AAAE8;
+  --color-clay-lilac: #C084FC;
+  --color-clay-lilac-d: #A96EE6;
+  --color-clay-amber: #FFB347;
+  --color-clay-amber-d: #E89D30;
+  --color-clay-rose: #F9A8D4;
+  --color-clay-rose-d: #E690BB;
+  --color-clay-teal: #2DD4BF;
+  --color-clay-teal-d: #1ABFAA;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-2xl: 44px;
+  --radius-pill: 9999px;
+
+  --shadow-clay-xs: 0 2px 0 rgba(0, 0, 0, .15), 0 4px 10px rgba(0, 0, 0, .10), inset 0 1px 4px rgba(255, 255, 255, .45);
+  --shadow-clay-sm: 0 4px 0 rgba(0, 0, 0, .16), 0 8px 20px rgba(0, 0, 0, .12), inset 0 2px 6px rgba(255, 255, 255, .50);
+  --shadow-clay-md: 0 6px 0 rgba(0, 0, 0, .18), 0 14px 36px rgba(0, 0, 0, .14), inset 0 2px 8px rgba(255, 255, 255, .55);
+  --shadow-clay-lg: 0 8px 0 rgba(0, 0, 0, .20), 0 20px 50px rgba(0, 0, 0, .16), inset 0 2px 8px rgba(255, 255, 255, .55);
+  --shadow-clay-xl: 0 12px 0 rgba(0, 0, 0, .22), 0 28px 70px rgba(0, 0, 0, .18), inset 0 2px 10px rgba(255, 255, 255, .60);
+
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+  --spacing-30: 7.5rem;
+
+  --animate-pop-in: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-fade-up: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slide-right: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slide-up: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-clay-pulse: clayPulse 2.5s ease-in-out infinite;
+  --animate-blob-drift: blobDrift 20s ease-in-out infinite alternate;
+  --animate-shimmer: shimmer 2s ease-in-out infinite;
+  --animate-grid-fill: gridFill 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-float-up: floatUp 1.2s ease-out both;
+
+  @keyframes popIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.65);
+    }
+
+    60% {
+      transform: scale(1.06);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    0% {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes clayPulse {
+
+    0%,
+    100% {
+      box-shadow: 0 6px 0 rgba(0, 0, 0, .18), 0 14px 36px rgba(0, 0, 0, .14);
+    }
+
+    50% {
+      box-shadow: 0 6px 0 rgba(0, 0, 0, .18), 0 28px 60px rgba(0, 0, 0, .22);
+    }
+  }
+
+  @keyframes blobDrift {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+      transform: translate(35px, 45px) scale(1.08);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes gridFill {
+    0% {
+      opacity: 0;
+      transform: scale(0.3) rotateZ(-10deg);
+    }
+
+    50% {
+      opacity: 0.7;
+      transform: scale(1.1) rotateZ(2deg);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1) rotateZ(0deg);
+    }
+  }
+
+  @keyframes floatUp {
+    0% {
+      opacity: 0.6;
+      transform: translateY(0) scale(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateY(-40px) scale(0.3);
+    }
+  }
+}
+
+/* ── CSS Variables (Additional Design Tokens) ──── */
+:root {
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Base ──────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Scroll Reveal ─────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Reduced Motion ────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Clay Card Base ────────────────────────────── */
+.clay-card {
+  background: var(--color-surface);
+  border-radius: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, .18), 0 14px 36px rgba(0, 0, 0, .14),
+    inset 0 2px 8px rgba(255, 255, 255, .55);
+  position: relative;
+  overflow: hidden;
+}
+
+.clay-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .45) 0%, transparent 55%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── Number Spin Arrows — Hide ─────────────────── */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ── Loader Styles ─────────────────────────────── */
+.loader-grid-cell {
+  border-radius: 16px;
+  background: rgba(255, 209, 102, 0.15);
+  border: 2px solid rgba(255, 209, 102, 0.2);
+  transition: all 0.4s var(--ease-spring);
+}
+
+.loader-grid-cell.active {
+  background: rgba(255, 209, 102, 0.35);
+  border-color: rgba(255, 209, 102, 0.6);
+  box-shadow: 0 0 20px rgba(255, 209, 102, 0.4), inset 0 1px 4px rgba(255, 255, 255, .3);
+}
+
+/* ── Particle Styles ─────────────────────────────── */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ── Screen Reader Only ──────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
