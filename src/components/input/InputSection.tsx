@@ -10,6 +10,7 @@ interface InputSectionProps {
 
 export function InputSection({ onGenerate }: InputSectionProps) {
     const [name, setName] = useState('')
+    const [gender, setGender] = useState<'male' | 'female'>('male')
     const [day, setDay] = useState('')
     const [month, setMonth] = useState('')
     const [year, setYear] = useState('')
@@ -39,10 +40,11 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                 day: dayNum,
                 month: monthNum,
                 year: yearNum,
+                gender,
                 name: name.trim().slice(0, 50) || undefined,
             })
         },
-        [day, month, year, name, onGenerate]
+        [day, month, year, name, gender, onGenerate]
     )
 
     return (
@@ -84,6 +86,36 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                     />
                 </div>
 
+                {/* Gender Select */}
+                <div className="mb-6">
+                    <p className="mb-2 text-left font-body text-sm font-bold text-ink2">
+                        Gender <span className="font-semibold text-ink3">(for Kua number)</span>
+                    </p>
+                    <div className="flex gap-3">
+                        <button
+                            type="button"
+                            onClick={() => setGender('male')}
+                            className={`flex-1 rounded-pill py-2.5 font-body text-sm font-bold transition-all duration-200 ${gender === 'male'
+                                    ? 'bg-clay-sky text-white shadow-clay-sm'
+                                    : 'border-2 border-bg2 bg-bg text-ink2 hover:border-clay-sky/50'
+                                }`}
+                        >
+                            ♂ Male
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setGender('female')}
+                            className={`flex-1 rounded-pill py-2.5 font-body text-sm font-bold transition-all duration-200 ${gender === 'female'
+                                    ? 'bg-clay-rose text-white shadow-clay-sm'
+                                    : 'border-2 border-bg2 bg-bg text-ink2 hover:border-clay-rose/50'
+                                }`}
+                        >
+                            ♀ Female
+                        </button>
+                    </div>
+                </div>
+
+
                 {/* DOB Input — Three Fields */}
                 <div className="mb-2">
                     <p className="mb-2 text-left font-body text-sm font-bold text-ink2">
@@ -108,8 +140,8 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                                 max={31}
                                 aria-describedby={errors.day ? 'day-error' : undefined}
                                 className={`w-full rounded-lg border-2 bg-bg px-3 py-3 text-center font-display text-xl font-bold text-ink outline-none transition-all duration-200 placeholder:font-body placeholder:text-sm placeholder:font-semibold placeholder:text-ink3/50 focus:shadow-clay-xs ${errors.day
-                                        ? 'border-clay-red'
-                                        : 'border-bg2 focus:border-clay-gold'
+                                    ? 'border-clay-red'
+                                    : 'border-bg2 focus:border-clay-gold'
                                     }`}
                             />
                             <p className="mt-1 text-center font-body text-xs font-semibold text-ink3">
@@ -135,8 +167,8 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                                 max={12}
                                 aria-describedby={errors.month ? 'month-error' : undefined}
                                 className={`w-full rounded-lg border-2 bg-bg px-3 py-3 text-center font-display text-xl font-bold text-ink outline-none transition-all duration-200 placeholder:font-body placeholder:text-sm placeholder:font-semibold placeholder:text-ink3/50 focus:shadow-clay-xs ${errors.month
-                                        ? 'border-clay-red'
-                                        : 'border-bg2 focus:border-clay-gold'
+                                    ? 'border-clay-red'
+                                    : 'border-bg2 focus:border-clay-gold'
                                     }`}
                             />
                             <p className="mt-1 text-center font-body text-xs font-semibold text-ink3">
@@ -162,8 +194,8 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                                 max={new Date().getFullYear()}
                                 aria-describedby={errors.year ? 'year-error' : undefined}
                                 className={`w-full rounded-lg border-2 bg-bg px-3 py-3 text-center font-display text-xl font-bold text-ink outline-none transition-all duration-200 placeholder:font-body placeholder:text-sm placeholder:font-semibold placeholder:text-ink3/50 focus:shadow-clay-xs ${errors.year
-                                        ? 'border-clay-red'
-                                        : 'border-bg2 focus:border-clay-gold'
+                                    ? 'border-clay-red'
+                                    : 'border-bg2 focus:border-clay-gold'
                                     }`}
                             />
                             <p className="mt-1 text-center font-body text-xs font-semibold text-ink3">

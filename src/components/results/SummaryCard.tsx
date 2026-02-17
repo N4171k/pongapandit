@@ -7,7 +7,7 @@ interface SummaryCardProps {
 }
 
 export function SummaryCard({ reading }: SummaryCardProps) {
-    const { summaryHeadline, summaryParagraph, arrows } = reading
+    const { summaryHeadline, summaryParagraph, arrowsOfStrength: arrows } = reading
 
     return (
         <div className="clay-card p-8">

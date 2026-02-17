@@ -59,8 +59,8 @@ export const NUMBER_COLOURS: Record<
 // Intensity labels for display
 export const INTENSITY_LABELS: Record<string, string> = {
     missing: 'Absent',
-    active: 'Active',
-    strong: 'Strong',
-    dominant: 'Dominant',
-    overwhelming: 'Overwhelming',
+    single: '1×',
+    double: '2×',
+    triple: '3×',
+    quadruple: '4×+',
 }

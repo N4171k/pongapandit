@@ -1,9 +1,9 @@
 'use client'
 
+import { useRef, useEffect } from 'react'
 import type { LoShuReading } from '@/lib/types'
-import { NUMBER_COLOURS, INTENSITY_LABELS } from '@/lib/utils'
 import { NUMBER_CONTENT } from '@/lib/content'
-import { useEffect, useRef } from 'react'
+import { NUMBER_COLOURS, INTENSITY_LABELS } from '@/lib/utils'
 
 interface DetailPanelProps {
     reading: LoShuReading
@@ -12,30 +12,23 @@ interface DetailPanelProps {
     onClose: () => void
 }
 
-export function DetailPanel({
-    reading,
-    digit,
-    isOpen,
-    onClose,
-}: DetailPanelProps) {
+export function DetailPanel({ reading, digit, isOpen, onClose }: DetailPanelProps) {
     const panelRef = useRef<HTMLDivElement>(null)
 
-    // Focus trap on open
-    useEffect(() => {
-        if (isOpen && panelRef.current) {
-            const closeBtn = panelRef.current.querySelector('button')
-            closeBtn?.focus()
-        }
-    }, [isOpen])
-
-    // Escape key to close
+    // Close on Escape key
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && isOpen) onClose()
         }
-        window.addEventListener('keydown', handler)
-        return () => window.removeEventListener('keydown', handler)
+        document.addEventListener('keydown', handler)
+        return () => document.removeEventListener('keydown', handler)
     }, [isOpen, onClose])
+
+    // Lock body scroll when open
+    useEffect(() => {
+        document.body.style.overflow = isOpen ? 'hidden' : ''
+        return () => { document.body.style.overflow = '' }
+    }, [isOpen])
 
     if (!digit) return null
 
@@ -43,21 +36,18 @@ export function DetailPanel({
     const content = NUMBER_CONTENT[digit]
     const colours = NUMBER_COLOURS[digit]
 
-    // Pick interpretation based on intensity
+    // Pick interpretation based on new intensity levels
     let interpretationText = content.missingText
-    if (analysis.intensity === 'active') interpretationText = content.presentText
-    else if (analysis.intensity === 'strong') interpretationText = content.strongText
-    else if (
-        analysis.intensity === 'dominant' ||
-        analysis.intensity === 'overwhelming'
-    )
-        interpretationText = content.dominantText
+    if (analysis.intensity === 'single') interpretationText = content.repetitions.single
+    else if (analysis.intensity === 'double') interpretationText = content.repetitions.double
+    else if (analysis.intensity === 'triple') interpretationText = content.repetitions.triple
+    else if (analysis.intensity === 'quadruple') interpretationText = content.repetitions.quadruple
 
     return (
         <>
-            {/* Backdrop — only on mobile */}
+            {/* Backdrop */}
             <div
-                className={`fixed inset-0 z-40 bg-ink/30 transition-opacity duration-300 lg:hidden ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+                className={`fixed inset-0 z-40 bg-ink/30 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
                     }`}
                 onClick={onClose}
                 aria-hidden="true"
@@ -67,26 +57,25 @@ export function DetailPanel({
             <div
                 ref={panelRef}
                 className={`fixed z-50 overflow-y-auto bg-surface shadow-clay-xl transition-transform duration-300 ${isOpen ? 'translate-x-0 translate-y-0' : ''
-                    } bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl lg:bottom-auto lg:left-auto lg:right-0 lg:top-0 lg:h-full lg:max-h-none lg:w-[420px] lg:rounded-l-2xl lg:rounded-tr-none ${!isOpen
-                        ? 'translate-y-full lg:translate-x-full lg:translate-y-0'
-                        : ''
+                    } bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl lg:bottom-auto lg:left-auto lg:right-0 lg:top-0 lg:h-full lg:max-h-none lg:w-[420px] lg:rounded-l-2xl lg:rounded-tr-none ${!isOpen ? 'translate-y-full lg:translate-x-full lg:translate-y-0' : ''
                     }`}
                 role="dialog"
                 aria-modal="true"
                 aria-label={`Details for number ${digit}`}
             >
-                <div className="p-6 lg:p-8">
-                    {/* Close button */}
-                    <button
-                        onClick={onClose}
-                        className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-bg2 font-body text-lg font-bold text-ink2 shadow-clay-xs transition-all hover:bg-bg hover:shadow-clay-sm active:translate-y-0.5"
-                        aria-label="Close details panel"
-                    >
-                        ✕
-                    </button>
+                {/* Close button — outside scroll content so always clickable */}
+                <button
+                    onClick={onClose}
+                    className="absolute right-4 top-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full bg-bg2 font-body text-lg font-bold text-ink2 shadow-clay-xs transition-all hover:bg-bg hover:shadow-clay-sm active:translate-y-0.5"
+                    aria-label="Close details panel"
+                >
+                    ✕
+                </button>
 
+                {/* Scrollable content */}
+                <div className="p-6 lg:p-8">
                     {/* Number Header */}
-                    <div className="mb-6 flex items-center gap-4">
+                    <div className="mb-4 flex items-center gap-4">
                         <div
                             className="flex h-16 w-16 items-center justify-center rounded-xl font-display text-3xl font-black text-white shadow-clay-sm"
                             style={{ background: colours.bg }}
@@ -103,8 +92,21 @@ export function DetailPanel({
                         </div>
                     </div>
 
+                    {/* Planetary / Elemental Info */}
+                    <div className="mb-5 flex flex-wrap gap-2">
+                        <span className="rounded-pill bg-clay-gold/15 px-3 py-1 font-body text-xs font-bold text-clay-gold-d">
+                            {content.meta.planet}
+                        </span>
+                        <span className="rounded-pill bg-clay-mint/15 px-3 py-1 font-body text-xs font-bold text-clay-mint-d">
+                            {content.meta.element}
+                        </span>
+                        <span className="rounded-pill bg-clay-sky/15 px-3 py-1 font-body text-xs font-bold text-clay-sky-d">
+                            {content.meta.direction}
+                        </span>
+                    </div>
+
                     {/* Intensity Badge */}
-                    <div className="mb-6 flex items-center gap-3">
+                    <div className="mb-5 flex items-center gap-3">
                         <span
                             className="rounded-pill px-4 py-1.5 font-body text-sm font-bold text-white shadow-clay-xs"
                             style={{ background: colours.shadow }}
@@ -113,13 +115,13 @@ export function DetailPanel({
                         </span>
                         <span className="font-body text-sm font-semibold text-ink3">
                             {analysis.count > 0
-                                ? `Appears ${analysis.count} time${analysis.count > 1 ? 's' : ''} in your chart`
-                                : 'Not present in your chart'}
+                                ? `Appears ${analysis.count} time${analysis.count > 1 ? 's' : ''}`
+                                : 'Not present in chart'}
                         </span>
                     </div>
 
                     {/* Interpretation */}
-                    <div className="mb-6">
+                    <div className="mb-5">
                         <h3 className="mb-2 font-display text-lg font-bold text-ink">
                             ✦ Interpretation
                         </h3>
@@ -128,25 +130,27 @@ export function DetailPanel({
                         </p>
                     </div>
 
-                    {/* Career */}
-                    <div className="mb-6">
+                    {/* Archetype */}
+                    <div className="mb-5">
                         <h3 className="mb-2 font-display text-lg font-bold text-ink">
-                            💼 Career Tendencies
+                            🎯 Core Archetype
                         </h3>
                         <p className="font-body text-sm font-semibold leading-relaxed text-ink2">
-                            {content.career}
+                            {content.meta.archetype}
                         </p>
                     </div>
 
-                    {/* Relationship */}
-                    <div className="mb-6">
-                        <h3 className="mb-2 font-display text-lg font-bold text-ink">
-                            💕 Relationship Style
-                        </h3>
-                        <p className="font-body text-sm font-semibold leading-relaxed text-ink2">
-                            {content.relationship}
-                        </p>
-                    </div>
+                    {/* Remedy (if missing) */}
+                    {analysis.isMissing && (
+                        <div className="mb-5 rounded-xl bg-clay-red/8 p-4">
+                            <h3 className="mb-2 font-display text-lg font-bold text-clay-red-d">
+                                🔮 Remedy
+                            </h3>
+                            <p className="font-body text-sm font-semibold leading-relaxed text-ink2">
+                                {content.remedy}
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

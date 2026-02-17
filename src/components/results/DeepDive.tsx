@@ -16,12 +16,12 @@ export function DeepDive({ reading }: DeepDiveProps) {
         setExpandedDigit(expandedDigit === digit ? null : digit)
     }
 
-    // Show all present numbers first, then missing
+    // Show all present numbers first (sorted by count desc), then missing
     const orderedDigits = [
         ...reading.presentNumbers.sort((a, b) => {
             const ca = reading.digitMap[a].count
             const cb = reading.digitMap[b].count
-            return cb - ca // dominant first
+            return cb - ca
         }),
         ...reading.missingNumbers.sort((a, b) => a - b),
     ]
@@ -39,14 +39,12 @@ export function DeepDive({ reading }: DeepDiveProps) {
                     const colours = NUMBER_COLOURS[digit]
                     const isExpanded = expandedDigit === digit
 
+                    // Pick text based on new intensity levels
                     let text = content.missingText
-                    if (analysis.intensity === 'active') text = content.presentText
-                    else if (analysis.intensity === 'strong') text = content.strongText
-                    else if (
-                        analysis.intensity === 'dominant' ||
-                        analysis.intensity === 'overwhelming'
-                    )
-                        text = content.dominantText
+                    if (analysis.intensity === 'single') text = content.repetitions.single
+                    else if (analysis.intensity === 'double') text = content.repetitions.double
+                    else if (analysis.intensity === 'triple') text = content.repetitions.triple
+                    else if (analysis.intensity === 'quadruple') text = content.repetitions.quadruple
 
                     return (
                         <div key={digit} className="clay-card overflow-hidden">
@@ -74,7 +72,7 @@ export function DeepDive({ reading }: DeepDiveProps) {
                                         {content.keyword}
                                     </h3>
                                     <p className="font-body text-xs font-semibold text-ink3">
-                                        {content.shortDesc}
+                                        {content.meta.planet} · {content.meta.element}
                                     </p>
                                 </div>
 
@@ -108,24 +106,28 @@ export function DeepDive({ reading }: DeepDiveProps) {
                                     <p className="mb-4 font-body text-sm font-semibold leading-relaxed text-ink2">
                                         {text}
                                     </p>
-                                    <div className="grid gap-3 sm:grid-cols-2">
-                                        <div className="rounded-lg bg-bg/60 p-3">
-                                            <p className="mb-1 font-body text-xs font-bold text-ink3">
-                                                💼 Career
-                                            </p>
-                                            <p className="font-body text-xs font-semibold text-ink2">
-                                                {content.career}
-                                            </p>
-                                        </div>
-                                        <div className="rounded-lg bg-bg/60 p-3">
-                                            <p className="mb-1 font-body text-xs font-bold text-ink3">
-                                                💕 Relationships
-                                            </p>
-                                            <p className="font-body text-xs font-semibold text-ink2">
-                                                {content.relationship}
-                                            </p>
-                                        </div>
+
+                                    {/* Archetype */}
+                                    <div className="mb-3 rounded-lg bg-bg/60 p-3">
+                                        <p className="mb-1 font-body text-xs font-bold text-ink3">
+                                            🎯 Core Archetype
+                                        </p>
+                                        <p className="font-body text-xs font-semibold text-ink2">
+                                            {content.meta.archetype}
+                                        </p>
                                     </div>
+
+                                    {/* Remedy (if missing) */}
+                                    {analysis.isMissing && (
+                                        <div className="rounded-lg bg-clay-red/8 p-3">
+                                            <p className="mb-1 font-body text-xs font-bold text-clay-red-d">
+                                                🔮 Remedy
+                                            </p>
+                                            <p className="font-body text-xs font-semibold text-ink2">
+                                                {content.remedy}
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>

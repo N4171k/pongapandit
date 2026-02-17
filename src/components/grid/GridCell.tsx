@@ -40,7 +40,7 @@ export function GridCell({
                 } ${isMissing
                     ? 'border-dashed border-ink3/30 hover:border-ink3/50'
                     : `border-white/60 hover:scale-105 hover:border-white/80`
-                } ${isHighlighted ? 'ring-2 ring-clay-gold ring-offset-2 ring-offset-bg' : ''} ${intensity === 'dominant' || intensity === 'overwhelming'
+                } ${isHighlighted ? 'ring-2 ring-clay-gold ring-offset-2 ring-offset-bg' : ''} ${intensity === 'triple' || intensity === 'quadruple'
                     ? 'animate-clay-pulse'
                     : ''
                 }`}
@@ -86,14 +86,14 @@ export function GridCell({
             {/* Intensity badge */}
             <span
                 className={`mt-1 rounded-pill px-2 py-0.5 font-body text-[10px] font-bold uppercase tracking-wider ${isMissing
-                        ? 'bg-ink3/10 text-ink3'
-                        : intensity === 'dominant' || intensity === 'overwhelming'
-                            ? 'text-white'
-                            : 'text-ink2'
+                    ? 'bg-ink3/10 text-ink3'
+                    : intensity === 'triple' || intensity === 'quadruple'
+                        ? 'text-white'
+                        : 'text-ink2'
                     }`}
                 style={
                     !isMissing &&
-                        (intensity === 'dominant' || intensity === 'overwhelming')
+                        (intensity === 'triple' || intensity === 'quadruple')
                         ? { background: colours.shadow }
                         : !isMissing
                             ? { background: `${colours.bg}30` }

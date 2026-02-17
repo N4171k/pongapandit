@@ -3,16 +3,17 @@ export interface DOBInput {
     day: number // 1–31
     month: number // 1–12
     year: number // 1900–current year
+    gender: 'male' | 'female'
     name?: string // optional personalisation
 }
 
 // ── Computation Output ─────────────────────────────
 export type IntensityLevel =
     | 'missing'
-    | 'active'
-    | 'strong'
-    | 'dominant'
-    | 'overwhelming'
+    | 'single'   // 1×
+    | 'double'   // 2×
+    | 'triple'   // 3×
+    | 'quadruple' // 4×+
 
 export interface GridPosition {
     row: number // 0 | 1 | 2
@@ -35,25 +36,55 @@ export interface PlaneResult {
     presentNumbers: number[]
     missingNumbers: number[]
     isComplete: boolean
-    completionRatio: number // 0 | 0.33 | 0.67 | 1
+    isEmpty: boolean // all 3 missing → Arrow of Weakness
+    completionRatio: number
     planeType: 'horizontal' | 'vertical' | 'diagonal'
-    arrowName?: string // only if isComplete
+    arrowName?: string // Arrow of Strength (when complete)
+    weaknessArrowName?: string // Arrow of Weakness (when empty)
     interpretation: string
+}
+
+export interface MinorArrow {
+    id: string
+    name: string
+    numbers: [number, number]
+    isPresent: boolean
+    interpretation: string
+}
+
+export interface KuaResult {
+    number: number
+    group: 'east' | 'west'
+    luckyDirections: string[]
+    unluckyDirections: string[]
+}
+
+export interface NumberMeta {
+    digit: number
+    planet: string
+    element: string
+    direction: string
+    archetype: string
 }
 
 export interface LoShuReading {
     input: DOBInput
-    rawDigits: number[]
+    rawDigits: number[] // digits placed in grid (no zeros, no century)
+    mulank: number // Driver/Psychic number
+    bhagyank: number // Conductor/Destiny number
+    kuaNumber: KuaResult
     digitMap: Record<number, DigitAnalysis>
-    grid: number[][] // GRID_LAYOUT constant — always [4,9,2],[3,5,7],[8,1,6]
+    grid: number[][] // GRID_LAYOUT constant
     planes: PlaneResult[]
+    minorArrows: MinorArrow[]
     missingNumbers: number[]
     presentNumbers: number[]
     dominantNumbers: number[] // count >= 2
-    arrows: string[] // arrow names for complete planes
+    arrowsOfStrength: string[]
+    arrowsOfWeakness: string[]
     summaryHeadline: string
     summaryParagraph: string
-    slug: string // URL-safe identifier for shareable link
+    slug: string
 }
 
 // ── Validation ─────────────────────────────────────
@@ -71,10 +102,13 @@ export interface NumberContent {
     digit: number
     keyword: string
     shortDesc: string
-    presentText: string
-    strongText: string
-    dominantText: string
+    meta: NumberMeta
+    repetitions: {
+        single: string  // 1×
+        double: string  // 2×
+        triple: string  // 3×
+        quadruple: string // 4×+
+    }
     missingText: string
-    career: string
-    relationship: string
+    remedy: string
 }

@@ -11,12 +11,12 @@ interface PlaneAnalysisProps {
 const PLANE_EMOJI: Record<string, string> = {
     mental: '🧠',
     emotional: '💜',
-    physical: '💪',
+    practical: '💪',
     thought: '💭',
     will: '🔥',
-    sensitivity: '🌸',
-    stability: '⚖️',
-    success: '🏆',
+    action: '⚡',
+    golden_yog: '🏆',
+    silver_yog: '🌸',
 }
 
 const PLANE_TYPE_LABEL: Record<string, string> = {
@@ -103,17 +103,24 @@ export function PlaneAnalysis({ reading, onHighlight }: PlaneAnalysisProps) {
                             <div className="mb-2 flex items-center gap-2">
                                 <span
                                     className={`rounded-pill px-2.5 py-0.5 font-body text-xs font-bold ${isComplete
-                                            ? 'bg-clay-mint/20 text-clay-mint-d'
-                                            : 'bg-clay-amber/20 text-clay-amber-d'
+                                        ? 'bg-clay-mint/20 text-clay-mint-d'
+                                        : 'bg-clay-amber/20 text-clay-amber-d'
                                         }`}
                                 >
                                     {isComplete
                                         ? '✓ COMPLETE'
-                                        : `${plane.presentNumbers.length} of 3`}
+                                        : plane.isEmpty
+                                            ? '✗ EMPTY'
+                                            : `${plane.presentNumbers.length} of 3`}
                                 </span>
                                 {plane.arrowName && (
                                     <span className="font-display text-xs font-bold italic text-clay-gold-d">
                                         {plane.arrowName}
+                                    </span>
+                                )}
+                                {plane.weaknessArrowName && (
+                                    <span className="font-display text-xs font-bold italic text-clay-red-d">
+                                        {plane.weaknessArrowName}
                                     </span>
                                 )}
                             </div>

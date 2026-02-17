@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Fraunces, Nunito } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 
 const fraunces = Fraunces({
@@ -52,7 +53,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${nunito.variable}`}>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body antialiased">
+        {children}
+        <Script src="https://js.puter.com/v2/" strategy="beforeInteractive" />
+      </body>
     </html>
   )
 }
