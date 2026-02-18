@@ -83,7 +83,7 @@ export function ChatPanel({
                     }`}
                 role="dialog"
                 aria-modal="true"
-                aria-label="Chat with Ponga Pandit"
+                aria-label="Chat with Shri Shri 1008 Devansh Maharaj Ponga Pandit"
             >
                 {/* Header */}
                 <div className="relative z-10 flex shrink-0 items-center justify-between border-b border-bg2 px-5 py-4">
@@ -93,7 +93,7 @@ export function ChatPanel({
                         </div>
                         <div>
                             <h3 className="font-display text-base font-bold text-ink">
-                                Ponga Pandit
+                                Shri Shri 1008 Devansh Maharaj Ponga Pandit
                             </h3>
                             <p className="font-body text-xs font-semibold text-ink3">
                                 AI Numerology Guide

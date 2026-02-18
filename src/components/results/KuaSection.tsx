@@ -1,16 +1,20 @@
 'use client'
 
 import type { KuaResult } from '@/lib/types'
+import { useTranslations } from 'next-intl'
 
 interface KuaSectionProps {
     kua: KuaResult
 }
 
 export function KuaSection({ kua }: KuaSectionProps) {
+    const t = useTranslations('KuaSection')
+    const tDirs = useTranslations('Directions')
+
     return (
         <section className="reveal mb-8">
             <h2 className="mb-4 font-display text-2xl font-bold text-ink">
-                Kua Number — Spatial Harmony
+                {t('title')}
             </h2>
             <div className="clay-card p-6">
                 <div className="mb-4 flex items-center gap-4">
@@ -19,24 +23,29 @@ export function KuaSection({ kua }: KuaSectionProps) {
                     </div>
                     <div>
                         <h3 className="font-display text-lg font-bold text-ink">
-                            {kua.group === 'east' ? 'East Group' : 'West Group'}
+                            {kua.group === 'east' ? t('eastGroup') : t('westGroup')}
                         </h3>
                         <p className="font-body text-xs font-bold text-ink3">
-                            Governs directional luck, Feng Shui orientation &amp; environmental harmony
+                            {t('desc1')}
                         </p>
                     </div>
                 </div>
 
                 <p className="mb-4 font-body text-sm font-semibold text-ink2">
-                    The Kua Number is an external spatial vector — it is <strong className="text-ink">not</strong> placed
-                    inside the Lo Shu Grid. It dictates how your innate psychological architecture interfaces
-                    with the Earth&apos;s magnetic directions for success, health, and relationships.
+                    {/* We need to render formatting HTML safely, or just split the string. 
+                        t.rich allows formatted text. Let's use t.rich for complex string or just simple text for now if possible.
+                        The original had <strong class="text-ink">not</strong>. 
+                        I'll use t.rich('desc2', { strong: (chunks) => <strong className="text-ink">{chunks}</strong> })
+                    */}
+                    {t.rich('desc2', {
+                        strong: (chunks) => <strong className="text-ink">{chunks}</strong>
+                    })}
                 </p>
 
                 <div className="grid gap-3 md:grid-cols-2">
                     <div className="rounded-xl bg-clay-mint/10 p-4">
                         <h4 className="mb-2 font-display text-sm font-bold text-clay-mint-d">
-                            ✦ Lucky Directions
+                            ✦ {t('luckyTitle')}
                         </h4>
                         <ul className="space-y-1">
                             {kua.luckyDirections.map((dir, i) => (
@@ -47,10 +56,10 @@ export function KuaSection({ kua }: KuaSectionProps) {
                                     <span className="mr-2 text-clay-mint">
                                         {i === 0 ? '★' : '•'}
                                     </span>
-                                    {dir}
+                                    {tDirs(dir as any)}
                                     {i === 0 && (
                                         <span className="ml-1 text-xs font-bold text-clay-mint-d">
-                                            (best)
+                                            {t('best')}
                                         </span>
                                     )}
                                 </li>
@@ -59,7 +68,7 @@ export function KuaSection({ kua }: KuaSectionProps) {
                     </div>
                     <div className="rounded-xl bg-clay-red/10 p-4">
                         <h4 className="mb-2 font-display text-sm font-bold text-clay-red-d">
-                            ✦ Avoid Directions
+                            ✦ {t('avoidTitle')}
                         </h4>
                         <ul className="space-y-1">
                             {kua.unluckyDirections.map((dir) => (
@@ -68,7 +77,7 @@ export function KuaSection({ kua }: KuaSectionProps) {
                                     className="font-body text-sm font-semibold text-ink2"
                                 >
                                     <span className="mr-2 text-clay-red">•</span>
-                                    {dir}
+                                    {tDirs(dir as any)}
                                 </li>
                             ))}
                         </ul>

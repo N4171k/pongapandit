@@ -20,7 +20,10 @@ import { DetailPanel } from '@/components/panels/DetailPanel'
 import { ChatBubble } from '@/components/chat/ChatBubble'
 import { ChatPanel } from '@/components/chat/ChatPanel'
 
+import { useTranslations } from 'next-intl';
+
 export function AppShell() {
+    const t = useTranslations('AppShell');
     const { state, generate, reset } = useLoShuReading()
     const { selectedDigit, isOpen, open, close } = useDetailPanel()
     const [highlightedNumbers, setHighlightedNumbers] = useState<number[]>([])
@@ -124,10 +127,7 @@ export function AppShell() {
                 {/* Disclaimer */}
                 <div className="reveal text-center">
                     <p className="mx-auto max-w-lg font-body text-xs font-semibold leading-relaxed text-ink3">
-                        Lo Shu Grid is a traditional Chinese numerology framework used for
-                        self-reflection and personal insight. Results are not scientifically
-                        validated predictions. This tool is intended for personal growth and
-                        entertainment purposes only.
+                        {t('disclaimer')}
                     </p>
                 </div>
             </div>

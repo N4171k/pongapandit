@@ -1,44 +1,46 @@
 'use client'
 
 import type { LoShuReading } from '@/lib/types'
-import { NUMBER_CONTENT } from '@/lib/content'
+import { useTranslations } from 'next-intl'
 
 interface MulankBhagyankProps {
     reading: LoShuReading
 }
 
 export function MulankBhagyank({ reading }: MulankBhagyankProps) {
-    const mulankContent = NUMBER_CONTENT[reading.mulank]
-    const bhagyankContent = NUMBER_CONTENT[reading.bhagyank]
+    const t = useTranslations('MulankBhagyank')
+    const tContent = useTranslations('NumberContent')
+
+    const mulank = reading.mulank
+    const bhagyank = reading.bhagyank
 
     return (
         <section className="reveal mb-8">
             <h2 className="mb-4 font-display text-2xl font-bold text-ink">
-                Driver &amp; Conductor Numbers
+                {t('title')}
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
                 {/* Mulank Card */}
                 <div className="clay-card p-6">
                     <div className="mb-3 flex items-center gap-3">
                         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-clay-sky/20 font-display text-2xl font-black text-clay-sky-d">
-                            {reading.mulank}
+                            {mulank}
                         </div>
                         <div>
                             <h3 className="font-display text-lg font-bold text-ink">
-                                Mulank (Driver)
+                                {t('mulankTitle')}
                             </h3>
                             <p className="font-body text-xs font-bold text-ink3">
-                                {mulankContent.meta.planet} · {mulankContent.meta.element}
+                                {tContent(`${mulank}.planet`)} · {tContent(`${mulank}.element`)}
                             </p>
                         </div>
                     </div>
                     <p className="font-body text-sm font-semibold leading-relaxed text-ink2">
-                        Your Psychic Number governs your daily personality, cognitive processing,
-                        career instincts, and personal behaviour. Derived solely from day of birth ({reading.input.day}).
+                        {t('mulankDesc', { day: reading.input.day })}
                     </p>
                     <div className="mt-3 rounded-lg bg-bg/80 px-3 py-2">
                         <p className="font-body text-xs font-bold text-ink2">
-                            {mulankContent.meta.archetype}
+                            {tContent(`${mulank}.archetype`)}
                         </p>
                     </div>
                 </div>
@@ -47,24 +49,23 @@ export function MulankBhagyank({ reading }: MulankBhagyankProps) {
                 <div className="clay-card p-6">
                     <div className="mb-3 flex items-center gap-3">
                         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-clay-lilac/20 font-display text-2xl font-black text-clay-lilac-d">
-                            {reading.bhagyank}
+                            {bhagyank}
                         </div>
                         <div>
                             <h3 className="font-display text-lg font-bold text-ink">
-                                Bhagyank (Conductor)
+                                {t('bhagyankTitle')}
                             </h3>
                             <p className="font-body text-xs font-bold text-ink3">
-                                {bhagyankContent.meta.planet} · {bhagyankContent.meta.element}
+                                {tContent(`${bhagyank}.planet`)} · {tContent(`${bhagyank}.element`)}
                             </p>
                         </div>
                     </div>
                     <p className="font-body text-sm font-semibold leading-relaxed text-ink2">
-                        Your Destiny Number represents broader karmic trajectory, long-term
-                        opportunities, and ultimate life purpose. Derived from full date of birth.
+                        {t('bhagyankDesc')}
                     </p>
                     <div className="mt-3 rounded-lg bg-bg/80 px-3 py-2">
                         <p className="font-body text-xs font-bold text-ink2">
-                            {bhagyankContent.meta.archetype}
+                            {tContent(`${bhagyank}.archetype`)}
                         </p>
                     </div>
                 </div>

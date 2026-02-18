@@ -41,6 +41,7 @@ export interface PlaneResult {
     planeType: 'horizontal' | 'vertical' | 'diagonal'
     arrowName?: string // Arrow of Strength (when complete)
     weaknessArrowName?: string // Arrow of Weakness (when empty)
+    hasWeaknessArrow?: boolean
     interpretation: string
 }
 
@@ -82,10 +83,9 @@ export interface LoShuReading {
     dominantNumbers: number[] // count >= 2
     arrowsOfStrength: string[]
     arrowsOfWeakness: string[]
-    summaryHeadline: string
-    summaryParagraph: string
     slug: string
 }
+
 
 // ── Validation ─────────────────────────────────────
 export interface ValidationResult {

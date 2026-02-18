@@ -1,8 +1,8 @@
 'use client'
 
 import type { LoShuReading } from '@/lib/types'
-import { NUMBER_COLOURS, INTENSITY_LABELS } from '@/lib/utils'
-import { NUMBER_CONTENT } from '@/lib/content'
+import { NUMBER_COLOURS } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface NumbersSectionProps {
     reading: LoShuReading
@@ -10,19 +10,21 @@ interface NumbersSectionProps {
 }
 
 export function NumbersSection({ reading, onNumberClick }: NumbersSectionProps) {
+    const t = useTranslations('NumbersSection')
+    const tIntensity = useTranslations('Intensity')
     const { presentNumbers, missingNumbers, dominantNumbers } = reading
 
     return (
         <section className="reveal">
             <h2 className="mb-6 text-center font-display text-2xl font-bold text-ink">
-                ✦ Your Numbers
+                {t('title')}
             </h2>
 
             <div className="grid gap-6 md:grid-cols-3">
                 {/* Present Numbers */}
                 <div className="clay-card p-6">
                     <h3 className="mb-3 font-display text-lg font-bold text-ink">
-                        🟢 Present
+                        {t('presentTitle')}
                     </h3>
                     <div className="flex flex-wrap gap-2">
                         {presentNumbers.map((num) => {
@@ -46,7 +48,7 @@ export function NumbersSection({ reading, onNumberClick }: NumbersSectionProps) 
                             )
                         })}
                         {presentNumbers.length === 0 && (
-                            <p className="font-body text-sm font-semibold text-ink3">None</p>
+                            <p className="font-body text-sm font-semibold text-ink3">{t('none')}</p>
                         )}
                     </div>
                 </div>
@@ -54,7 +56,7 @@ export function NumbersSection({ reading, onNumberClick }: NumbersSectionProps) 
                 {/* Missing Numbers */}
                 <div className="clay-card p-6">
                     <h3 className="mb-3 font-display text-lg font-bold text-ink">
-                        🔮 Growth Areas
+                        {t('missingTitle')}
                     </h3>
                     <div className="flex flex-wrap gap-2">
                         {missingNumbers.map((num) => (
@@ -64,12 +66,12 @@ export function NumbersSection({ reading, onNumberClick }: NumbersSectionProps) 
                                 className="flex items-center gap-1.5 rounded-lg bg-ink3/10 px-3 py-2 font-body text-sm font-bold text-ink3 transition-all hover:scale-105 hover:bg-ink3/20 active:translate-y-0.5"
                             >
                                 <span className="font-display text-lg">{num}</span>
-                                <span className="text-xs">Absent</span>
+                                <span className="text-xs">{t('absent')}</span>
                             </button>
                         ))}
                         {missingNumbers.length === 0 && (
                             <p className="font-body text-sm font-semibold text-clay-mint">
-                                All numbers are present! ✨
+                                {t('allPresent')}
                             </p>
                         )}
                     </div>
@@ -78,7 +80,7 @@ export function NumbersSection({ reading, onNumberClick }: NumbersSectionProps) 
                 {/* Dominant Numbers */}
                 <div className="clay-card p-6">
                     <h3 className="mb-3 font-display text-lg font-bold text-ink">
-                        ⚡ Dominant
+                        {t('dominantTitle')}
                     </h3>
                     <div className="flex flex-wrap gap-2">
                         {dominantNumbers.map((num) => {
@@ -93,14 +95,14 @@ export function NumbersSection({ reading, onNumberClick }: NumbersSectionProps) 
                                 >
                                     <span className="font-display text-lg">{num}</span>
                                     <span className="text-xs">
-                                        {INTENSITY_LABELS[analysis.intensity]}
+                                        {tIntensity(analysis.intensity as any)}
                                     </span>
                                 </button>
                             )
                         })}
                         {dominantNumbers.length === 0 && (
                             <p className="font-body text-sm font-semibold text-ink3">
-                                No dominant numbers — an evenly balanced chart.
+                                {t('balanced')}
                             </p>
                         )}
                     </div>

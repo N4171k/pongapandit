@@ -1,6 +1,7 @@
 'use client'
 
 import type { LoShuReading } from '@/lib/types'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 interface PlaneAnalysisProps {
@@ -19,19 +20,19 @@ const PLANE_EMOJI: Record<string, string> = {
     silver_yog: '🌸',
 }
 
-const PLANE_TYPE_LABEL: Record<string, string> = {
-    horizontal: 'Row',
-    vertical: 'Column',
-    diagonal: 'Diagonal',
-}
-
 export function PlaneAnalysis({ reading, onHighlight }: PlaneAnalysisProps) {
+    const t = useTranslations('PlaneAnalysis')
+    const tStrength = useTranslations('PlaneStrength')
+    const tWeakness = useTranslations('PlaneWeakness')
+    const tDeveloping = useTranslations('PlaneDeveloping')
+    const tArrowNames = useTranslations('ArrowNames')
+
     const [hoveredPlane, setHoveredPlane] = useState<string | null>(null)
 
     return (
         <section className="reveal">
             <h2 className="mb-6 text-center font-display text-2xl font-bold text-ink">
-                ✦ Plane Analysis
+                {t('title')}
             </h2>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -39,6 +40,27 @@ export function PlaneAnalysis({ reading, onHighlight }: PlaneAnalysisProps) {
                     const ratio = plane.completionRatio
                     const isComplete = plane.isComplete
                     const emoji = PLANE_EMOJI[plane.id] || '✦'
+                    const count = plane.presentNumbers.length
+
+                    // Determine interpretation
+                    let interpretation = ''
+                    if (isComplete) {
+                        interpretation = tStrength(plane.id)
+                    } else if (plane.isEmpty && plane.hasWeaknessArrow) {
+                        interpretation = tWeakness(plane.id)
+                    } else if (count > 0) {
+                        interpretation = tDeveloping(count.toString() as any)
+                    }
+
+                    // Status Label
+                    let statusLabel = ''
+                    if (isComplete) statusLabel = t('Status.complete')
+                    else if (plane.isEmpty) statusLabel = t('Status.empty')
+                    else statusLabel = t('Status.partial', { count })
+
+                    // Arrow Names
+                    const strengthArrow = isComplete ? tArrowNames(`Strength.${plane.id}`) : null
+                    const weaknessArrow = (plane.isEmpty && plane.hasWeaknessArrow) ? tArrowNames(`Weakness.${plane.id}`) : null
 
                     return (
                         <div
@@ -60,11 +82,11 @@ export function PlaneAnalysis({ reading, onHighlight }: PlaneAnalysisProps) {
                                         {emoji}
                                     </span>
                                     <h3 className="font-display text-base font-bold text-ink">
-                                        {plane.name}
+                                        {t(`Names.${plane.id}`)}
                                     </h3>
                                 </div>
                                 <span className="rounded-pill px-2 py-0.5 font-body text-xs font-bold uppercase tracking-wider text-ink3">
-                                    {PLANE_TYPE_LABEL[plane.planeType]}
+                                    {t(`Types.${plane.planeType}`)}
                                 </span>
                             </div>
 
@@ -107,28 +129,26 @@ export function PlaneAnalysis({ reading, onHighlight }: PlaneAnalysisProps) {
                                         : 'bg-clay-amber/20 text-clay-amber-d'
                                         }`}
                                 >
-                                    {isComplete
-                                        ? '✓ COMPLETE'
-                                        : plane.isEmpty
-                                            ? '✗ EMPTY'
-                                            : `${plane.presentNumbers.length} of 3`}
+                                    {statusLabel}
                                 </span>
-                                {plane.arrowName && (
+                                {strengthArrow && (
                                     <span className="font-display text-xs font-bold italic text-clay-gold-d">
-                                        {plane.arrowName}
+                                        {strengthArrow}
                                     </span>
                                 )}
-                                {plane.weaknessArrowName && (
+                                {weaknessArrow && (
                                     <span className="font-display text-xs font-bold italic text-clay-red-d">
-                                        {plane.weaknessArrowName}
+                                        {weaknessArrow}
                                     </span>
                                 )}
                             </div>
 
                             {/* Interpretation */}
-                            <p className="font-body text-xs font-semibold leading-relaxed text-ink2">
-                                {plane.interpretation}
-                            </p>
+                            {interpretation && (
+                                <p className="font-body text-xs font-semibold leading-relaxed text-ink2">
+                                    {interpretation}
+                                </p>
+                            )}
                         </div>
                     )
                 })}

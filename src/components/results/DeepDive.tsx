@@ -2,14 +2,17 @@
 
 import { useState } from 'react'
 import type { LoShuReading } from '@/lib/types'
-import { NUMBER_CONTENT } from '@/lib/content'
-import { NUMBER_COLOURS, INTENSITY_LABELS } from '@/lib/utils'
+import { NUMBER_COLOURS } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface DeepDiveProps {
     reading: LoShuReading
 }
 
 export function DeepDive({ reading }: DeepDiveProps) {
+    const t = useTranslations('DeepDive')
+    const tNumber = useTranslations('NumberContent')
+    const tIntensity = useTranslations('Intensity')
     const [expandedDigit, setExpandedDigit] = useState<number | null>(null)
 
     const toggleDigit = (digit: number) => {
@@ -29,22 +32,24 @@ export function DeepDive({ reading }: DeepDiveProps) {
     return (
         <section className="reveal">
             <h2 className="mb-6 text-center font-display text-2xl font-bold text-ink">
-                ✦ Personality Deep Dive
+                {t('title')}
             </h2>
 
             <div className="space-y-3">
                 {orderedDigits.map((digit) => {
                     const analysis = reading.digitMap[digit]
-                    const content = NUMBER_CONTENT[digit]
                     const colours = NUMBER_COLOURS[digit]
                     const isExpanded = expandedDigit === digit
 
                     // Pick text based on new intensity levels
-                    let text = content.missingText
-                    if (analysis.intensity === 'single') text = content.repetitions.single
-                    else if (analysis.intensity === 'double') text = content.repetitions.double
-                    else if (analysis.intensity === 'triple') text = content.repetitions.triple
-                    else if (analysis.intensity === 'quadruple') text = content.repetitions.quadruple
+                    let textCheck = ''
+                    if (analysis.isMissing) {
+                        textCheck = 'missingText'
+                    } else {
+                        // intensity is 'single', 'double', etc.
+                        textCheck = `repetitions.${analysis.intensity}`
+                    }
+                    const text = tNumber(`${digit}.${textCheck}`)
 
                     return (
                         <div key={digit} className="clay-card overflow-hidden">
@@ -69,18 +74,18 @@ export function DeepDive({ reading }: DeepDiveProps) {
                                 {/* Info */}
                                 <div className="flex-1">
                                     <h3 className="font-display text-base font-bold text-ink">
-                                        {content.keyword}
+                                        {tNumber(`${digit}.keyword`)}
                                     </h3>
                                     <p className="font-body text-xs font-semibold text-ink3">
-                                        {content.meta.planet} · {content.meta.element}
+                                        {tNumber(`${digit}.planet`)} · {tNumber(`${digit}.element`)}
                                     </p>
                                 </div>
 
                                 {/* Intensity pill */}
                                 <span
                                     className={`shrink-0 rounded-pill px-2.5 py-1 font-body text-xs font-bold ${analysis.isMissing
-                                            ? 'bg-ink3/10 text-ink3'
-                                            : 'text-white'
+                                        ? 'bg-ink3/10 text-ink3'
+                                        : 'text-white'
                                         }`}
                                     style={
                                         !analysis.isMissing
@@ -88,7 +93,7 @@ export function DeepDive({ reading }: DeepDiveProps) {
                                             : undefined
                                     }
                                 >
-                                    {INTENSITY_LABELS[analysis.intensity]}
+                                    {tIntensity(analysis.intensity)}
                                 </span>
 
                                 {/* Expand icon */}
@@ -110,10 +115,10 @@ export function DeepDive({ reading }: DeepDiveProps) {
                                     {/* Archetype */}
                                     <div className="mb-3 rounded-lg bg-bg/60 p-3">
                                         <p className="mb-1 font-body text-xs font-bold text-ink3">
-                                            🎯 Core Archetype
+                                            {t('coreArchetype')}
                                         </p>
                                         <p className="font-body text-xs font-semibold text-ink2">
-                                            {content.meta.archetype}
+                                            {tNumber(`${digit}.archetype`)}
                                         </p>
                                     </div>
 
@@ -121,10 +126,10 @@ export function DeepDive({ reading }: DeepDiveProps) {
                                     {analysis.isMissing && (
                                         <div className="rounded-lg bg-clay-red/8 p-3">
                                             <p className="mb-1 font-body text-xs font-bold text-clay-red-d">
-                                                🔮 Remedy
+                                                {t('remedyTitle')}
                                             </p>
                                             <p className="font-body text-xs font-semibold text-ink2">
-                                                {content.remedy}
+                                                {tNumber(`${digit}.remedy`)}
                                             </p>
                                         </div>
                                     )}

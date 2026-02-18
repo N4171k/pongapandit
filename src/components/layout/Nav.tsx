@@ -1,4 +1,9 @@
+import { useTranslations } from 'next-intl';
+import { LanguageSwitcher } from './LanguageSwitcher';
+
 export function Nav() {
+    const t = useTranslations('Nav');
+
     return (
         <nav
             className="sticky top-0 z-50 flex items-center justify-center px-6 py-3"
@@ -16,9 +21,11 @@ export function Nav() {
                     🔢
                 </span>
                 <span className="font-display text-lg font-bold tracking-tight text-ink">
-                    Ponga Pandit
+                    {t('title')}
                 </span>
+                <LanguageSwitcher />
             </div>
         </nav>
     )
 }
+

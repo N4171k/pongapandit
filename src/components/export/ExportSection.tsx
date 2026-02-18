@@ -2,6 +2,7 @@
 
 import { useCallback, useRef } from 'react'
 import type { LoShuReading } from '@/lib/types'
+import { useTranslations } from 'next-intl'
 
 interface ExportSectionProps {
     reading: LoShuReading
@@ -9,6 +10,7 @@ interface ExportSectionProps {
 }
 
 export function ExportSection({ reading, onReset }: ExportSectionProps) {
+    const t = useTranslations('ExportSection')
     const isExporting = useRef(false)
 
     const handleDownload = useCallback(async () => {
@@ -46,14 +48,14 @@ export function ExportSection({ reading, onReset }: ExportSectionProps) {
                 onClick={handleDownload}
                 className="rounded-pill bg-gradient-to-r from-clay-sky to-clay-lilac px-8 py-3.5 font-body text-base font-black text-white shadow-clay-md transition-all hover:shadow-clay-lg hover:brightness-105 active:translate-y-0.5 active:shadow-clay-sm"
             >
-                📥 Download as Image
+                {t('downloadImage')}
             </button>
 
             <button
                 onClick={onReset}
                 className="rounded-pill border-2 border-ink3/30 bg-surface px-8 py-3.5 font-body text-base font-black text-ink2 shadow-clay-sm transition-all hover:border-ink3/50 hover:shadow-clay-md active:translate-y-0.5 active:shadow-clay-xs"
             >
-                🔄 New Reading
+                {t('newReading')}
             </button>
         </section>
     )

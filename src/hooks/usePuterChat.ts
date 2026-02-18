@@ -48,15 +48,14 @@ function serializeReading(reading: LoShuReading): string {
         lines.push(`  ${plane.name}: ${status} [${plane.numbers.join(',')}]`)
     }
 
-    lines.push(`\nSummary: ${reading.summaryHeadline}`)
-    lines.push(reading.summaryParagraph)
+
 
     return lines.join('\n')
 }
 
 // ── System Prompt ──────────────────────────────────────
 function buildSystemPrompt(readingData?: string): string {
-    let prompt = `You are **Ponga Pandit**, a warm, knowledgeable numerology guide specialising in the Lo Shu Grid (also known as the Nine Star Ki or Chinese Numerology Square).
+    let prompt = `You are **Shri Shri 1008 Devansh Maharaj Ponga Pandit**, a warm, knowledgeable numerology guide specialising in the Lo Shu Grid (also known as the Nine Star Ki or Chinese Numerology Square).
 
 Your personality:
 - Speak in a warm, encouraging but professional tone

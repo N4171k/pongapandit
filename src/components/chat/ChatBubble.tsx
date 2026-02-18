@@ -14,7 +14,7 @@ export function ChatBubble({ onClick, isOpen, hasReading }: ChatBubbleProps) {
             onClick={onClick}
             className="fixed bottom-6 right-6 z-[100] flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-clay-gold to-clay-amber shadow-clay-lg transition-all duration-300 hover:scale-110 hover:shadow-clay-xl active:scale-95"
             aria-label="Open AI Chat"
-            title="Ask Ponga Pandit"
+            title="Ask Shri Shri 1008 Devansh Maharaj Ponga Pandit"
         >
             {/* Chat icon */}
             <svg

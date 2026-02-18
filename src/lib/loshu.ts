@@ -7,7 +7,7 @@ import type {
     MinorArrow,
     KuaResult,
 } from './types'
-import { getPlaneInterpretation, getWeaknessInterpretation, getMinorArrowContent, buildSummary } from './content'
+import { getPlaneInterpretation, getWeaknessInterpretation, getMinorArrowContent } from './content'
 
 // ── Constants ───────────────────────────────────────
 export const GRID_LAYOUT: number[][] = [
@@ -36,24 +36,21 @@ export const PLANES = [
         name: 'Mental Plane',
         numbers: [4, 9, 2],
         planeType: 'horizontal' as const,
-        arrowName: 'Arrow of the Intellect',
-        weaknessArrowName: undefined as string | undefined,
+        hasWeaknessArrow: false,
     },
     {
         id: 'emotional',
         name: 'Emotional Plane',
         numbers: [3, 5, 7],
         planeType: 'horizontal' as const,
-        arrowName: 'Arrow of the Spiritual',
-        weaknessArrowName: 'Arrow of Scepticism',
+        hasWeaknessArrow: true,
     },
     {
         id: 'practical',
         name: 'Practical Plane',
         numbers: [8, 1, 6],
         planeType: 'horizontal' as const,
-        arrowName: 'Arrow of Planning',
-        weaknessArrowName: undefined as string | undefined,
+        hasWeaknessArrow: false,
     },
     // Vertical Planes
     {
@@ -61,24 +58,21 @@ export const PLANES = [
         name: 'Thought Plane',
         numbers: [4, 3, 8],
         planeType: 'vertical' as const,
-        arrowName: 'Arrow of the Thinker',
-        weaknessArrowName: 'Arrow of Impracticality',
+        hasWeaknessArrow: true,
     },
     {
         id: 'will',
         name: 'Will Plane',
         numbers: [9, 5, 1],
         planeType: 'vertical' as const,
-        arrowName: 'Arrow of Determination',
-        weaknessArrowName: 'Arrow of Indecision',
+        hasWeaknessArrow: true,
     },
     {
         id: 'action',
         name: 'Action Plane',
         numbers: [2, 7, 6],
         planeType: 'vertical' as const,
-        arrowName: 'Arrow of Action',
-        weaknessArrowName: undefined as string | undefined,
+        hasWeaknessArrow: false,
     },
     // Diagonal Planes (Yogic Alignments)
     {
@@ -86,16 +80,14 @@ export const PLANES = [
         name: 'Golden Yog (Raj Yog)',
         numbers: [4, 5, 6],
         planeType: 'diagonal' as const,
-        arrowName: 'Arrow of Prosperity — Golden Yog',
-        weaknessArrowName: 'Arrow of Frustrations',
+        hasWeaknessArrow: true,
     },
     {
         id: 'silver_yog',
         name: 'Silver Yog (Rajat Yog)',
         numbers: [2, 5, 8],
         planeType: 'diagonal' as const,
-        arrowName: 'Arrow of Abundance — Silver Yog',
-        weaknessArrowName: 'Arrow of Emotional Sensitivity',
+        hasWeaknessArrow: true,
     },
 ]
 
@@ -109,8 +101,8 @@ const MINOR_ARROW_DEFS = [
 
 // Additional weakness arrows that don't map to main planes
 const EXTRA_WEAKNESS_ARROWS = [
-    { numbers: [3, 6, 9], name: 'Arrow of Poor Memory' },
-    { numbers: [7, 8, 9], name: 'Arrow of Hesitation' },
+    { numbers: [3, 6, 9], id: 'poor_memory' },
+    { numbers: [7, 8, 9], id: 'hesitation' },
 ]
 
 // ── Main Export ─────────────────────────────────────
@@ -179,11 +171,11 @@ export function computeLoShuReading(input: DOBInput): LoShuReading {
             isComplete,
             isEmpty,
             completionRatio: presentNumbers.length / 3,
-            arrowName: isComplete ? plane.arrowName : undefined,
-            weaknessArrowName: isEmpty ? plane.weaknessArrowName : undefined,
+            arrowName: isComplete ? plane.id : undefined, // Using ID for translation lookup
+            weaknessArrowName: isEmpty && plane.hasWeaknessArrow ? plane.id : undefined, // Using ID
             interpretation: isComplete
                 ? getPlaneInterpretation(plane.id, 'strength')
-                : isEmpty && plane.weaknessArrowName
+                : isEmpty && plane.hasWeaknessArrow
                     ? getWeaknessInterpretation(plane.id)
                     : getPlaneInterpretation(plane.id, 'developing', presentNumbers.length),
         }
@@ -193,7 +185,7 @@ export function computeLoShuReading(input: DOBInput): LoShuReading {
     const extraWeaknesses: string[] = []
     for (const ew of EXTRA_WEAKNESS_ARROWS) {
         const allMissing = ew.numbers.every((n) => digitMap[n].isMissing)
-        if (allMissing) extraWeaknesses.push(ew.name)
+        if (allMissing) extraWeaknesses.push(ew.id)
     }
 
     // Step 10: Minor arrows
@@ -216,26 +208,20 @@ export function computeLoShuReading(input: DOBInput): LoShuReading {
     const dominantNumbers = Object.values(digitMap)
         .filter((d) => d.count >= 2)
         .map((d) => d.digit)
+
     const arrowsOfStrength = planes
         .filter((p) => p.isComplete)
-        .map((p) => p.arrowName!)
-    const arrowsOfWeakness = [
-        ...planes
-            .filter((p) => p.isEmpty && p.weaknessArrowName)
-            .map((p) => p.weaknessArrowName!),
-        ...extraWeaknesses,
-    ]
+        .map((p) => p.id)
 
-    // Step 12: Summary
-    const { headline, paragraph } = buildSummary({
-        digitMap,
-        planes,
-        dominantNumbers,
-        missingNumbers,
-        mulank,
-        bhagyank,
-        input,
-    })
+    // Filter duplicates if any (though plane IDs are unique)
+
+    // Collect weakness IDs
+    const planeWeaknesses = planes
+        .filter((p) => p.isEmpty && p.hasWeaknessArrow)
+        .map((p) => p.id)
+
+    const arrowsOfWeakness = [...planeWeaknesses, ...extraWeaknesses]
+
 
     return {
         input,
@@ -252,11 +238,11 @@ export function computeLoShuReading(input: DOBInput): LoShuReading {
         dominantNumbers,
         arrowsOfStrength,
         arrowsOfWeakness,
-        summaryHeadline: headline,
-        summaryParagraph: paragraph,
         slug: buildSlug(input),
     }
 }
+
+
 
 // ── Helpers ─────────────────────────────────────────
 function getIntensity(count: number): IntensityLevel {

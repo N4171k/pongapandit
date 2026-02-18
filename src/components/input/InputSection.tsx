@@ -3,12 +3,14 @@
 import { useState, useCallback } from 'react'
 import type { DOBInput } from '@/lib/types'
 import { validateDOB } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface InputSectionProps {
     onGenerate: (input: DOBInput) => void
 }
 
 export function InputSection({ onGenerate }: InputSectionProps) {
+    const t = useTranslations('InputSection')
     const [name, setName] = useState('')
     const [gender, setGender] = useState<'male' | 'female'>('male')
     const [day, setDay] = useState('')
@@ -52,15 +54,14 @@ export function InputSection({ onGenerate }: InputSectionProps) {
             {/* Hero Header */}
             <div className="mb-10">
                 <h1 className="mb-3 font-display text-4xl font-black leading-tight tracking-tight text-ink md:text-5xl">
-                    Your numbers.
+                    {t('heroTitle')}
                     <br />
                     <span className="bg-gradient-to-r from-clay-gold via-clay-red to-clay-lilac bg-clip-text text-transparent">
-                        Your nature.
+                        {t('heroSubtitle')}
                     </span>
                 </h1>
                 <p className="mx-auto max-w-md font-body text-base font-semibold leading-relaxed text-ink2">
-                    Discover the hidden patterns in your date of birth through the ancient
-                    Lo Shu Grid — a 4,000-year-old Chinese numerology system.
+                    {t('heroDescription')}
                 </p>
             </div>
 
@@ -72,15 +73,15 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                         htmlFor="name-input"
                         className="mb-2 block text-left font-body text-sm font-bold text-ink2"
                     >
-                        Your Name{' '}
-                        <span className="font-semibold text-ink3">(optional)</span>
+                        {t('nameLabel')}{' '}
+                        <span className="font-semibold text-ink3">{t('optional')}</span>
                     </label>
                     <input
                         id="name-input"
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="Enter your name"
+                        placeholder={t('namePlaceholder')}
                         maxLength={50}
                         className="w-full rounded-lg border-2 border-bg2 bg-bg px-4 py-3 font-body text-base font-semibold text-ink outline-none transition-all duration-200 placeholder:text-ink3/50 focus:border-clay-gold focus:shadow-clay-xs"
                     />
@@ -89,28 +90,28 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                 {/* Gender Select */}
                 <div className="mb-6">
                     <p className="mb-2 text-left font-body text-sm font-bold text-ink2">
-                        Gender <span className="font-semibold text-ink3">(for Kua number)</span>
+                        {t('genderLabel')} <span className="font-semibold text-ink3">{t('genderHint')}</span>
                     </p>
                     <div className="flex gap-3">
                         <button
                             type="button"
                             onClick={() => setGender('male')}
                             className={`flex-1 rounded-pill py-2.5 font-body text-sm font-bold transition-all duration-200 ${gender === 'male'
-                                    ? 'bg-clay-sky text-white shadow-clay-sm'
-                                    : 'border-2 border-bg2 bg-bg text-ink2 hover:border-clay-sky/50'
+                                ? 'bg-clay-sky text-white shadow-clay-sm'
+                                : 'border-2 border-bg2 bg-bg text-ink2 hover:border-clay-sky/50'
                                 }`}
                         >
-                            ♂ Male
+                            ♂ {t('male')}
                         </button>
                         <button
                             type="button"
                             onClick={() => setGender('female')}
                             className={`flex-1 rounded-pill py-2.5 font-body text-sm font-bold transition-all duration-200 ${gender === 'female'
-                                    ? 'bg-clay-rose text-white shadow-clay-sm'
-                                    : 'border-2 border-bg2 bg-bg text-ink2 hover:border-clay-rose/50'
+                                ? 'bg-clay-rose text-white shadow-clay-sm'
+                                : 'border-2 border-bg2 bg-bg text-ink2 hover:border-clay-rose/50'
                                 }`}
                         >
-                            ♀ Female
+                            ♀ {t('female')}
                         </button>
                     </div>
                 </div>
@@ -119,13 +120,13 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                 {/* DOB Input — Three Fields */}
                 <div className="mb-2">
                     <p className="mb-2 text-left font-body text-sm font-bold text-ink2">
-                        Date of Birth
+                        {t('dobLabel')}
                     </p>
                     <div className="grid grid-cols-3 gap-3">
                         {/* Day */}
                         <div>
                             <label htmlFor="day-input" className="sr-only">
-                                Day
+                                {t('day')}
                             </label>
                             <input
                                 id="day-input"
@@ -145,13 +146,13 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                                     }`}
                             />
                             <p className="mt-1 text-center font-body text-xs font-semibold text-ink3">
-                                Day
+                                {t('day')}
                             </p>
                         </div>
                         {/* Month */}
                         <div>
                             <label htmlFor="month-input" className="sr-only">
-                                Month
+                                {t('month')}
                             </label>
                             <input
                                 id="month-input"
@@ -172,13 +173,13 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                                     }`}
                             />
                             <p className="mt-1 text-center font-body text-xs font-semibold text-ink3">
-                                Month
+                                {t('month')}
                             </p>
                         </div>
                         {/* Year */}
                         <div>
                             <label htmlFor="year-input" className="sr-only">
-                                Year
+                                {t('year')}
                             </label>
                             <input
                                 id="year-input"
@@ -199,7 +200,7 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                                     }`}
                             />
                             <p className="mt-1 text-center font-body text-xs font-semibold text-ink3">
-                                Year
+                                {t('year')}
                             </p>
                         </div>
                     </div>
@@ -243,13 +244,12 @@ export function InputSection({ onGenerate }: InputSectionProps) {
                     type="submit"
                     className="mt-4 w-full rounded-pill bg-gradient-to-r from-clay-gold to-clay-amber px-8 py-4 font-body text-lg font-black text-ink shadow-clay-md transition-all duration-200 hover:shadow-clay-lg hover:brightness-105 active:translate-y-0.5 active:shadow-clay-sm"
                 >
-                    ✨ Generate My Grid
+                    ✨ {t('generateBtn')}
                 </button>
 
                 {/* Disclaimer */}
                 <p className="mt-4 font-body text-xs font-semibold leading-relaxed text-ink3">
-                    Lo Shu Grid is a traditional Chinese numerology framework used for
-                    self-reflection. Not scientifically validated.
+                    {t('disclaimer')}
                 </p>
             </form>
         </section>
